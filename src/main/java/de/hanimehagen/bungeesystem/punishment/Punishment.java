@@ -1,23 +1,29 @@
 package de.hanimehagen.bungeesystem.punishment;
 
 public class Punishment {
-    private final int id;
+    private final String id;
     private final String uuid;
     private final String name;
     private final String operatorUuid;
     private final String operatorName;
-    private final Reason reason;
+    private final String reason;
+    private final PunishmentType type;
+    private final long startTime;
+    private final long endTime;
 
-    public Punishment(int id, String uuid, String name, String operatorUuid, String operatorName, Reason reason) {
+    public Punishment(String id, String uuid, String name, String operatorUuid, String operatorName, String reason, PunishmentType type, long startTime, long endTime) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
         this.operatorUuid = operatorUuid;
         this.operatorName = operatorName;
         this.reason = reason;
+        this.type = type;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -37,8 +43,19 @@ public class Punishment {
         return operatorName;
     }
 
-    public Reason getReason() {
+    public String getReason() {
         return reason;
     }
 
+    public PunishmentType getType() {
+        return type;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
 }

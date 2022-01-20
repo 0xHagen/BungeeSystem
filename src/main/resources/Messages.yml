@@ -1,0 +1,5 @@
+Prefix: "&9System &8» "
+NoPerms: "&cCommand not found or no permissions!"
+CorrectUse: "&cCorrect Usage: &c%cmd%"
+Punishment:
+  Prefix: "&cPunishment &8» "

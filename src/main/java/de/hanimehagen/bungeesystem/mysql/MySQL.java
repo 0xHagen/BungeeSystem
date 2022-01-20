@@ -43,4 +43,9 @@ public class MySQL {
         return connection;
     }
 
+    public static void createTables() {
+        PunishmentQuerys.createPunishmentTable();
+        PlayerQuerys.createPlayerTable();
+    }
+
 }
