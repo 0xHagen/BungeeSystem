@@ -1,0 +1,4 @@
+name: BungeeSystem
+version: '${project.version}'
+main: de.hanimehagen.bungeesystem.Bungeesystem
+description: System for Bungeecord Servers

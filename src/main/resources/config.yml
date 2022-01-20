@@ -1,0 +1,8 @@
+#Duration formatting examples: 1h, 2d, 3m, 4y, -1
+Reasons:
+  Mute:
+    1: "Insult, 3h"
+    2: "Samming, 1h"
+  Ban:
+    1: "Hacking, -1"
+    2: "Trolling, 1d"
