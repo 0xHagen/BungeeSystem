@@ -11,9 +11,8 @@ public class PostLoginListener implements Listener {
     @EventHandler
     public void onPreLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
+        PlayerQuerys.deleteNotMatchingPlayerName(player);
         PlayerQuerys.createPlayer(player);
-        System.out.println(player.getName());
-        System.out.println(player.getUniqueId().toString());
     }
 
 }

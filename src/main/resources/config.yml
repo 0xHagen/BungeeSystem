@@ -3,10 +3,14 @@ Reasons:
   Mute:
     1:
       Name: "Insult"
-      Duration: "3h"
-    2: "Samming, 1h"
-      Name: "Insult"
-      Duration: "3h"
+      Duration: "1d"
+    2:
+      Name: "Spamming"
+      Duration: "1h"
   Ban:
-    1: "Hacking, -1"
-    2: "Trolling, 1d"
+    1:
+      Name: "Hacking"
+      Duration: "-1"
+    2:
+      Name: "Trolling"
+      Duration: "1m"

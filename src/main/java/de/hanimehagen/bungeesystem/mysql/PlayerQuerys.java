@@ -23,22 +23,6 @@ public class PlayerQuerys {
         }
     }
 
-    public static boolean existsId(String id) {
-        try {
-            MySQL.connect();
-            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM Player WHERE uuid = ?");
-            ps.setString(1, id);
-            ResultSet rs = ps.executeQuery();
-            boolean exists = rs.next();
-            ps.close();
-            rs.close();
-            return exists;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public static boolean existsName(String name) {
         try {
             MySQL.connect();
@@ -68,4 +52,36 @@ public class PlayerQuerys {
             e.printStackTrace();
         }
     }
+
+    public static void deleteNotMatchingPlayerName(ProxiedPlayer player) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT uuid FROM Player WHERE name = ?");
+            ps.setString(1, player.getName());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String uuid = rs.getString("uuid");
+                if(!player.getUniqueId().toString().equals(uuid)) {
+                    deletePlayer(uuid);
+                }
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deletePlayer(String uuid) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Player WHERE uuid = ?");
+            ps.setString(1, uuid);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
