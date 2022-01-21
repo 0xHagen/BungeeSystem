@@ -3,3 +3,6 @@ NoPerms: "&cCommand not found or no permissions!"
 CorrectUse: "&cCorrect Usage: &c%cmd%"
 Punishment:
   Prefix: "&cPunishment &8» "
+  Ban:
+    ReasonListingHeader: "&7Available Ban-IDs:"
+    ReasonListingComponent: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"

@@ -19,6 +19,21 @@ public class DurationUtil {
         else return 0;
     }
 
+    public static String getDurationString(String str) {
+        if(str.equals("-1")) {
+            return "Permanent";
+        } else if(str.endsWith("h")) {
+            return str.replace("h", "") + " Hours";
+        } else if(str.endsWith("d")) {
+            return str.replace("d", "") + " Days";
+        } else if(str.endsWith("m")) {
+            return str.replace("m", "") + " Months";
+        } else if(str.endsWith("y")) {
+            return str.replace("y", "") + " Years";
+        }
+        return "";
+    }
+
     public static long parseDuration(String str) {
         String result = str.substring(0, str.length() - 1);
         return Long.parseLong(result);

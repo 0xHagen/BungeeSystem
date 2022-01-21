@@ -53,6 +53,25 @@ public class PlayerQuerys {
         }
     }
 
+    public static String getUuid(String name) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT uuid FROM Player WHERE name = ?");
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            String uuid = "";
+            while (rs.next()) {
+                uuid = rs.getString("uuid");
+            }
+            ps.close();
+            rs.close();
+            return uuid;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void deleteNotMatchingPlayerName(ProxiedPlayer player) {
         try {
             MySQL.connect();
