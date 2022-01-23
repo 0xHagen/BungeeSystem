@@ -3,23 +3,25 @@ NoPerms: "&cCommand not found or no permissions!"
 CorrectUse: "&cCorrect Usage: &c%cmd%"
 Punishment:
   Prefix: "&cPunishment &8» "
-  Ban:
+  AlreadyBanned: "&7The player &c%player% &7is already banned"
+  AlreadyMuted: "&7The player &c%player% &7is already muted"
+  BanReasons:
     Header: "&7Available Ban-IDs:"
     Component: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"
   Check:
     Header:
       - "&7Current status of the following player&8:"
-      - "&cName&8: &7%name%"
-      - "&cUUID&8: &7%uuid%"
+      - "&7Name&8: &c%name%"
+      - "&7UUID&8: &7%uuid%"
     Muted:
-      - "&cMuted for&8: &7%reason%"
-      - "&cMuted from&8: &7%operator%"
-      - "&cMute startet at&8: &7%start%"
-      - "&cMute ending at&8: &7%end%"
+      - "&7Muted for&8: &c%reason%"
+      - "&7Muted from&8: &c%operator%"
+      - "&7Mute startet at&8: &c%start%"
+      - "&7Mute ending at&8: &c%end%"
     Banned:
-      - "&cBanned for&8: &7%reason%"
-      - "&cBanned from&8: &7%operator%"
-      - "&cBan startet at&8: &7%start%"
-      - "&cBan ending at&8: &7%end%"
+      - "&7Banned for&8: &c%reason%"
+      - "&7Banned from&8: &c%operator%"
+      - "&7Ban startet at&8: &c%start%"
+      - "&7Ban ending at&8: &c%end%"
     NotMuted: "&cMute&8: &7Player is currently not muted"
     NotBanned: "&cBan&8: &7Player is currently not banned"

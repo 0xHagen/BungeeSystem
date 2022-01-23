@@ -20,9 +20,6 @@ public class BanCommand extends Command {
         super("ban", "system.ban");
     }
 
-    //TODO: Check if player is banned
-    //TODO: Add perma ban support
-
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("system.ban")) {
@@ -35,20 +32,29 @@ public class BanCommand extends Command {
                         String name = args[0];
                         String operatorUuid;
                         String operatorName;
-                        if (sender instanceof ProxiedPlayer) {
-                            ProxiedPlayer player = (ProxiedPlayer) sender;
-                            operatorUuid = player.getUniqueId().toString();
-                            operatorName = player.getName();
+                        if(!PunishmentQuerys.isPunishedByUuid(uuid, PunishmentType.BAN)) {
+                            if (sender instanceof ProxiedPlayer) {
+                                ProxiedPlayer player = (ProxiedPlayer) sender;
+                                operatorUuid = player.getUniqueId().toString();
+                                operatorName = player.getName();
+                            } else {
+                                operatorUuid = "CONSOLE";
+                                operatorName = "CONSOLE";
+                            }
+                            String reason = Data.BAN_REASON_MAP.get(args[1]).split("\\$")[0];
+                            PunishmentType type = PunishmentType.BAN;
+                            long start = System.currentTimeMillis();
+                            long end;
+                            if(DurationUtil.getDuration(Data.BAN_REASON_MAP.get(args[1]).split("\\$")[1]) == -1) {
+                                end = -1;
+                            } else {
+                                end = start + DurationUtil.getDuration(Data.BAN_REASON_MAP.get(args[1]).split("\\$")[1]);
+                            }
+                            punishment = new Punishment(id, uuid, name, operatorUuid, operatorName, reason, type, start, end);
+                            PunishmentQuerys.createPunishment(punishment);
                         } else {
-                            operatorUuid = "CONSOLE";
-                            operatorName = "CONSOLE";
+                            sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.AlreadyBanned")).replace("%player%", name)));
                         }
-                        String reason = Data.BAN_REASON_MAP.get(args[1]).split("\\$")[0];
-                        PunishmentType type = PunishmentType.BAN;
-                        long start = System.currentTimeMillis();
-                        long end = start + DurationUtil.getDuration(Data.BAN_REASON_MAP.get(args[1]).split("\\$")[1]);
-                        punishment = new Punishment(id, uuid, name, operatorUuid, operatorName, reason, type, start, end);
-                        PunishmentQuerys.createPunishment(punishment);
                     } else {
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/ban <player> <id> (Incorrect Id)"))));
                     }
@@ -56,11 +62,11 @@ public class BanCommand extends Command {
                     sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/ban <player> <id> (Player not found)"))));
                 }
             } else if(args.length == 0) {
-                sender.sendMessage(new TextComponent(MethodUtil.format("\n" + Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.Ban.Header"))));
+                sender.sendMessage(new TextComponent(MethodUtil.format("\n" + Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.BanReasons.Header"))));
                 for(int i = 0; i < Data.BAN_REASON_MAP.size(); i++) {
                     String reason = Data.BAN_REASON_MAP.get(String.valueOf(i + 1)).split("\\$")[0];
                     String duration = DurationUtil.getDurationString(Data.BAN_REASON_MAP.get(String.valueOf(i + 1)).split("\\$")[1]);
-                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.Ban.Component").replace("%id%", String.valueOf(i + 1)).replace("%reason%", reason)).replace("%duration%", duration)));
+                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.BanReasons.Component").replace("%id%", String.valueOf(i + 1)).replace("%reason%", reason)).replace("%duration%", duration)));
                 }
                 sender.sendMessage(new TextComponent(MethodUtil.format("")));
             } else {

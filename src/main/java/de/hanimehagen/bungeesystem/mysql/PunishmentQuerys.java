@@ -81,7 +81,7 @@ public class PunishmentQuerys {
             ps.close();
             rs.close();
             long now = System.currentTimeMillis() / 1000;
-            return end > now;
+            return end > now || end == -1;
         } catch (SQLException e) {
             e.printStackTrace();
         }

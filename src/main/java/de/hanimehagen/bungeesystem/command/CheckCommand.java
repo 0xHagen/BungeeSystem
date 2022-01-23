@@ -9,7 +9,6 @@ import de.hanimehagen.bungeesystem.util.MethodUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
-import org.checkerframework.checker.signedness.qual.SignedPositiveFromUnsigned;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -39,7 +38,6 @@ public class CheckCommand extends Command {
 
                     boolean isMuted = PunishmentQuerys.isPunishedByUuid(uuid, PunishmentType.MUTE);
                     boolean isBanned = PunishmentQuerys.isPunishedByUuid(uuid, PunishmentType.BAN);
-
                     StringBuilder headerMessage = new StringBuilder();
                     List<String> headerLayout = Configs.getMessages().getStringList("Punishment.Check.Header");
 
@@ -49,7 +47,6 @@ public class CheckCommand extends Command {
                         assert uuid != null;
                         headerMessage.append(Data.PUNISH_PREFIX).append(component.replace("%name%", name).replace("%uuid%", uuid)).append("\n");
                     }
-
                     sender.sendMessage(new TextComponent(MethodUtil.format(headerMessage.toString())));
 
                     if(isMuted) {
@@ -70,23 +67,13 @@ public class CheckCommand extends Command {
                         } else {
                             operator = "CONSOLE";
                         }
-
                         Timestamp timestampStart = new Timestamp(PunishmentQuerys.getStartTimeByUuid(uuid, PunishmentType.MUTE));
                         Timestamp timestampEnd = new Timestamp(PunishmentQuerys.getEndTimeByUuid(uuid, PunishmentType.MUTE));
-
-                        for (String component : muteLayout) {
-                            assert reason != null;
-                            assert operator != null;
-                            mutedMessage.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", Data.DATE_FORMAT.format(timestampEnd))).append("\n");
-                        }
-
-                        sender.sendMessage(new TextComponent(MethodUtil.format(mutedMessage.toString())));
-
+                        sendPunishmentCheck(sender, mutedMessage, muteLayout, reason, operator, timestampStart, timestampEnd);
                     } else {
                         String notMuted = Configs.getMessages().getString("Punishment.Check.NotMuted");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notMuted + "\n")));
                     }
-
                     if(isBanned) {
                         StringBuilder bannedMessage = new StringBuilder();
                         List<String> bannedLayout = Configs.getMessages().getStringList("Punishment.Check.Banned");
@@ -105,29 +92,13 @@ public class CheckCommand extends Command {
                         } else {
                             operator = "CONSOLE";
                         }
-
                         Timestamp timestampStart = new Timestamp(PunishmentQuerys.getStartTimeByUuid(uuid, PunishmentType.BAN));
                         Timestamp timestampEnd = new Timestamp(PunishmentQuerys.getEndTimeByUuid(uuid, PunishmentType.BAN));
-
-                        System.out.println(reason);
-                        System.out.println(operator);
-                        System.out.println(Data.DATE_FORMAT.format(timestampStart));
-                        System.out.println(Data.DATE_FORMAT.format(timestampEnd));
-
-                        for (String component : bannedLayout) {
-                            assert reason != null;
-                            assert operator != null;
-                            bannedMessage.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", Data.DATE_FORMAT.format(timestampEnd))).append("\n");
-                        }
-
-                        sender.sendMessage(new TextComponent(MethodUtil.format(bannedMessage.toString())));
-
+                        sendPunishmentCheck(sender, bannedMessage, bannedLayout, reason, operator, timestampStart, timestampEnd);
                     } else {
                         String notBanned = Configs.getMessages().getString("Punishment.Check.NotBanned");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notBanned + "\n")));
                     }
-
-
                 } else {
                     sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/check <player> (Player not found)"))));
                 }
@@ -137,5 +108,15 @@ public class CheckCommand extends Command {
         } else {
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.NO_PERMS)));
         }
+    }
+
+    private void sendPunishmentCheck(CommandSender sender, StringBuilder mutedMessage, List<String> muteLayout, String reason, String operator, Timestamp timestampStart, Timestamp timestampEnd) {
+        for (String component : muteLayout) {
+            assert reason != null;
+            assert operator != null;
+            mutedMessage.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", Data.DATE_FORMAT.format(timestampEnd))).append("\n");
+        }
+
+        sender.sendMessage(new TextComponent(MethodUtil.format(mutedMessage.toString())));
     }
 }
