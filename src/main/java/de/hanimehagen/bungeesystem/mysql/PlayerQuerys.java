@@ -39,6 +39,22 @@ public class PlayerQuerys {
         return false;
     }
 
+    public static boolean existsUuid(String uuid) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM Player WHERE uuid = ?");
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            boolean exists = rs.next();
+            ps.close();
+            rs.close();
+            return exists;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void createPlayer(ProxiedPlayer player) {
         try {
             MySQL.connect();
@@ -66,6 +82,25 @@ public class PlayerQuerys {
             ps.close();
             rs.close();
             return uuid;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getName(String uuid) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT name FROM Player WHERE uuid = ?");
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            String name = "";
+            while (rs.next()) {
+                name = rs.getString("name");
+            }
+            ps.close();
+            rs.close();
+            return name;
         } catch (SQLException e) {
             e.printStackTrace();
         }

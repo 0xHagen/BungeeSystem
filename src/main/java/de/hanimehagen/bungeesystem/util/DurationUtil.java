@@ -2,19 +2,17 @@ package de.hanimehagen.bungeesystem.util;
 
 public class DurationUtil {
 
-    //bei command execute checken, ob id in config existiert
-
     public static long getDuration(String str) {
         if(str.equals("-1")) {
             return Long.parseLong(str);
         } else if(str.endsWith("h")) {
-            return parseDuration(str) * 60 * 60;
+            return parseDuration(str) * 60 * 60 * 1000;
         } else if(str.endsWith("d")) {
-            return parseDuration(str) * 24 * 60 * 60;
+            return parseDuration(str) * 24 * 60 * 60 * 1000;
         } else if(str.endsWith("m")) {
-            return parseDuration(str) * 30 * 24 * 60 * 60;
+            return parseDuration(str) * 30 * 24 * 60 * 60 * 1000;
         } else if(str.endsWith("y")) {
-            return parseDuration(str) * 365 * 24 * 60 * 60;
+            return parseDuration(str) * 365 * 24 * 60 * 60 * 1000;
         }
         else return 0;
     }

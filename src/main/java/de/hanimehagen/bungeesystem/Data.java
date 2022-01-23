@@ -2,6 +2,7 @@ package de.hanimehagen.bungeesystem;
 
 import net.md_5.bungee.config.Configuration;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public class Data {
@@ -11,6 +12,8 @@ public class Data {
 
     public static final Configuration config = Configs.getConfig();
     public static final Configuration messages = Configs.getMessages();
+
+    public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
     public static final String PREFIX = messages.getString("Prefix");
     public static final String NO_PERMS = messages.getString("NoPerms");

@@ -1,6 +1,7 @@
 package de.hanimehagen.bungeesystem.mysql;
 
 import de.hanimehagen.bungeesystem.punishment.Punishment;
+import de.hanimehagen.bungeesystem.punishment.PunishmentType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,6 +65,127 @@ public class PunishmentQuerys {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean isPunishedByUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT end FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ResultSet rs = ps.executeQuery();
+            long end = 0;
+            while (rs.next()) {
+                end = rs.getLong("end");
+            }
+            ps.close();
+            rs.close();
+            long now = System.currentTimeMillis() / 1000;
+            return end > now;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static String getReasonByPunishedUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT reason FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ResultSet rs = ps.executeQuery();
+            String reason = null;
+            while (rs.next()) {
+                reason = rs.getString("reason");
+            }
+            ps.close();
+            rs.close();
+            return reason;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getOperatorUuidByPunishedUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT operatorUuid FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ResultSet rs = ps.executeQuery();
+            String uuid = null;
+            while (rs.next()) {
+                uuid = rs.getString("operatorUuid");
+            }
+            ps.close();
+            rs.close();
+            return uuid;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getOperatorByPunishedUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT operator FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ResultSet rs = ps.executeQuery();
+            String name = null;
+            while (rs.next()) {
+                name = rs.getString("operatorUuid");
+            }
+            ps.close();
+            rs.close();
+            return name;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static long getStartTimeByUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT start FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ResultSet rs = ps.executeQuery();
+            long start = 0;
+            while (rs.next()) {
+                start = rs.getLong("start");
+            }
+            ps.close();
+            rs.close();
+            return start;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static long getEndTimeByUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT end FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ResultSet rs = ps.executeQuery();
+            long end = 0;
+            while (rs.next()) {
+                end = rs.getLong("end");
+            }
+            ps.close();
+            rs.close();
+            return end;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

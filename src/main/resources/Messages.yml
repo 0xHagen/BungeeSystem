@@ -4,5 +4,22 @@ CorrectUse: "&cCorrect Usage: &c%cmd%"
 Punishment:
   Prefix: "&cPunishment &8» "
   Ban:
-    ReasonListingHeader: "&7Available Ban-IDs:"
-    ReasonListingComponent: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"
+    Header: "&7Available Ban-IDs:"
+    Component: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"
+  Check:
+    Header:
+      - "&7Current status of the following player&8:"
+      - "&cName&8: &7%name%"
+      - "&cUUID&8: &7%uuid%"
+    Muted:
+      - "&cMuted for&8: &7%reason%"
+      - "&cMuted from&8: &7%operator%"
+      - "&cMute startet at&8: &7%start%"
+      - "&cMute ending at&8: &7%end%"
+    Banned:
+      - "&cBanned for&8: &7%reason%"
+      - "&cBanned from&8: &7%operator%"
+      - "&cBan startet at&8: &7%start%"
+      - "&cBan ending at&8: &7%end%"
+    NotMuted: "&cMute&8: &7Player is currently not muted"
+    NotBanned: "&cBan&8: &7Player is currently not banned"
