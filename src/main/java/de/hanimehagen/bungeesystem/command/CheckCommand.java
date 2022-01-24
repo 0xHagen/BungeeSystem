@@ -50,51 +50,13 @@ public class CheckCommand extends Command {
                     sender.sendMessage(new TextComponent(MethodUtil.format(headerMessage.toString())));
 
                     if(isMuted) {
-                        StringBuilder mutedMessage = new StringBuilder();
-                        List<String> muteLayout = Configs.getMessages().getStringList("Punishment.Check.Muted");
-
-                        String reason = PunishmentQuerys.getReasonByPunishedUuid(uuid, PunishmentType.MUTE);
-                        String operatorUuid = PunishmentQuerys.getOperatorUuidByPunishedUuid(uuid, PunishmentType.MUTE);
-                        String operator;
-
-                        assert operatorUuid != null;
-                        if(!operatorUuid.equals("CONSOLE")) {
-                            if(PlayerQuerys.existsUuid(operatorUuid)) {
-                                operator = PlayerQuerys.getName(operatorUuid);
-                            } else {
-                                operator = PunishmentQuerys.getOperatorByPunishedUuid(uuid, PunishmentType.MUTE);
-                            }
-                        } else {
-                            operator = "CONSOLE";
-                        }
-                        Timestamp timestampStart = new Timestamp(PunishmentQuerys.getStartTimeByUuid(uuid, PunishmentType.MUTE));
-                        Timestamp timestampEnd = new Timestamp(PunishmentQuerys.getEndTimeByUuid(uuid, PunishmentType.MUTE));
-                        sendPunishmentCheck(sender, mutedMessage, muteLayout, reason, operator, timestampStart, timestampEnd);
+                        sendPunishmentCheck1(sender, uuid, PunishmentType.MUTE, "Punishment.Check.Muted");
                     } else {
                         String notMuted = Configs.getMessages().getString("Punishment.Check.NotMuted");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notMuted + "\n")));
                     }
                     if(isBanned) {
-                        StringBuilder bannedMessage = new StringBuilder();
-                        List<String> bannedLayout = Configs.getMessages().getStringList("Punishment.Check.Banned");
-
-                        String reason = PunishmentQuerys.getReasonByPunishedUuid(uuid, PunishmentType.BAN);
-                        String operatorUuid = PunishmentQuerys.getOperatorUuidByPunishedUuid(uuid, PunishmentType.BAN);
-                        String operator;
-
-                        assert operatorUuid != null;
-                        if(!operatorUuid.equals("CONSOLE")) {
-                            if(PlayerQuerys.existsUuid(operatorUuid)) {
-                                operator = PlayerQuerys.getName(operatorUuid);
-                            } else {
-                                operator = PunishmentQuerys.getOperatorByPunishedUuid(uuid, PunishmentType.BAN);
-                            }
-                        } else {
-                            operator = "CONSOLE";
-                        }
-                        Timestamp timestampStart = new Timestamp(PunishmentQuerys.getStartTimeByUuid(uuid, PunishmentType.BAN));
-                        Timestamp timestampEnd = new Timestamp(PunishmentQuerys.getEndTimeByUuid(uuid, PunishmentType.BAN));
-                        sendPunishmentCheck(sender, bannedMessage, bannedLayout, reason, operator, timestampStart, timestampEnd);
+                        sendPunishmentCheck1(sender, uuid, PunishmentType.BAN, "Punishment.Check.Banned");
                     } else {
                         String notBanned = Configs.getMessages().getString("Punishment.Check.NotBanned");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notBanned + "\n")));
@@ -110,13 +72,41 @@ public class CheckCommand extends Command {
         }
     }
 
-    private void sendPunishmentCheck(CommandSender sender, StringBuilder mutedMessage, List<String> muteLayout, String reason, String operator, Timestamp timestampStart, Timestamp timestampEnd) {
-        for (String component : muteLayout) {
-            assert reason != null;
-            assert operator != null;
-            mutedMessage.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", Data.DATE_FORMAT.format(timestampEnd))).append("\n");
+    private void sendPunishmentCheck1(CommandSender sender, String uuid, PunishmentType type, String layoutPath) {
+        StringBuilder message = new StringBuilder();
+        List<String> layout = Configs.getMessages().getStringList(layoutPath);
+
+        String reason = PunishmentQuerys.getReasonByPunishedUuid(uuid, type);
+        String operatorUuid = PunishmentQuerys.getOperatorUuidByPunishedUuid(uuid, type);
+        String operator;
+
+        assert operatorUuid != null;
+        if(!operatorUuid.equals("CONSOLE")) {
+            if(PlayerQuerys.existsUuid(operatorUuid)) {
+                operator = PlayerQuerys.getName(operatorUuid);
+            } else {
+                operator = PunishmentQuerys.getOperatorByPunishedUuid(uuid, type);
+            }
+        } else {
+            operator = "CONSOLE";
         }
 
-        sender.sendMessage(new TextComponent(MethodUtil.format(mutedMessage.toString())));
+        Timestamp timestampStart = new Timestamp(PunishmentQuerys.getStartTimeByUuid(uuid, type));
+        long endLong = PunishmentQuerys.getEndTimeByUuid(uuid, type);
+        String endString;
+        if(endLong == -1) {
+            endString = "Permanent";
+        } else {
+            endString = Data.DATE_FORMAT.format(new Timestamp(endLong));
+        }
+
+        for(String component : layout) {
+            assert reason != null;
+            assert operator != null;
+            message.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", endString)).append("\n");
+        }
+
+        sender.sendMessage(new TextComponent(MethodUtil.format(message.toString())));
+
     }
 }

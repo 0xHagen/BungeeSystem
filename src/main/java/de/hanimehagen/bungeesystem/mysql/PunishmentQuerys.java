@@ -108,6 +108,30 @@ public class PunishmentQuerys {
         return null;
     }
 
+    public static PunishmentType getTypeByPunishId(String id) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT type FROM Punishments WHERE id = ?");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            String type = null;
+            while (rs.next()) {
+                type = rs.getString("type");
+            }
+            ps.close();
+            rs.close();
+            assert type != null;
+            if(type.equals(PunishmentType.BAN.toString())) {
+                return PunishmentType.BAN;
+            } else if(type.equals(PunishmentType.MUTE.toString())) {
+                return PunishmentType.MUTE;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String getOperatorUuidByPunishedUuid(String id, PunishmentType type) {
         try {
             MySQL.connect();
@@ -186,6 +210,32 @@ public class PunishmentQuerys {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static void deletePunishmentByUuid(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Punishments WHERE uuid = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deletePunishmentByPunishId(String id, PunishmentType type) {
+        try {
+            MySQL.connect();
+            PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Punishments WHERE id = ? AND type = ?");
+            ps.setString(1, id);
+            ps.setString(2, type.toString());
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

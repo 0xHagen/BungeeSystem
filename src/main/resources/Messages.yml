@@ -3,10 +3,23 @@ NoPerms: "&cCommand not found or no permissions!"
 CorrectUse: "&cCorrect Usage: &c%cmd%"
 Punishment:
   Prefix: "&cPunishment &8» "
+  Ban: "&7The player &c%player% &7was succesfully banned from %operator% for the reason %reason%"
+  Mute: "&7The player &c%player% &7was succesfully muted from %operator% for the reason %reason%"
+  Unban: "&7The player &c%player% &7was succesfully unbanned from %operator%"
+  Unmute: "&7The player &c%player% &7was succesfully unmuted from %operator%"
+  UnbanId: "&7The BanID &c%id% &7was succesfully unbanned from %operator%"
+  UnmuteId: "&7The MuteID &c%id% &7was succesfully unmuted from %operator%"
   AlreadyBanned: "&7The player &c%player% &7is already banned"
   AlreadyMuted: "&7The player &c%player% &7is already muted"
+  NotBanned: "&7The player &c%player% &7is currently not banned"
+  NotMuted: "&7The player &c%player% &7is currently not muted"
+  CantFindBanId: "&7There was no BanID found with the value: &c%id%"
+  CantFindMuteId: "&7There was no MuteID found with the value: &c%id%"
   BanReasons:
     Header: "&7Available Ban-IDs:"
+    Component: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"
+  MuteReasons:
+    Header: "&7Available Mute-IDs:"
     Component: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"
   Check:
     Header:
