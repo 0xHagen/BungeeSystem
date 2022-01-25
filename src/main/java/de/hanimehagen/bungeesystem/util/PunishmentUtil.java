@@ -11,6 +11,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 public class PunishmentUtil {
@@ -45,6 +46,37 @@ public class PunishmentUtil {
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(punishMessagePath)).replace("%player%", name).replace("%operator%", operatorName).replace("%reason%", reason)));
         } else {
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(alreadyMessagePath)).replace("%player%", name)));
+        }
+    }
+
+    public static void unpunishName(CommandSender sender, String name, PunishmentType type, String unpunishMessagePath, String notPunishMessagePath) {
+        String operatorName;
+        if(sender instanceof ProxiedPlayer) {
+            operatorName = sender.getName();
+        } else {
+            operatorName = "CONSOLE";
+        }
+        String uuid = PlayerQuerys.getUuid(name);
+        if(PunishmentQuerys.isPunishedByUuid(uuid, type)) {
+            PunishmentQuerys.deletePunishmentByUuid(uuid, type);
+            sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(unpunishMessagePath)).replace("%player%", name).replace("%operator%", operatorName)));
+        } else {
+            sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(notPunishMessagePath)).replace("%player%", name)));
+        }
+    }
+
+    public static void unpunishId(CommandSender sender, String id, PunishmentType type, String unbanIdMessagePath, String cantFindIdMessagePath) {
+        String operatorName;
+        if(sender instanceof ProxiedPlayer) {
+            operatorName = sender.getName();
+        } else {
+            operatorName = "CONSOLE";
+        }
+        if(PunishmentQuerys.existsId(id) && Objects.equals(PunishmentQuerys.getTypeByPunishId(id), type)) {
+            PunishmentQuerys.deletePunishmentByPunishId(id, type);
+            sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(unbanIdMessagePath)).replace("%id%", id).replace("%operator%", operatorName)));
+        } else {
+            sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(cantFindIdMessagePath)).replace("%id%", id)));
         }
     }
 

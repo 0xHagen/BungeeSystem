@@ -6,7 +6,7 @@ import de.hanimehagen.bungeesystem.command.MuteCommand;
 import de.hanimehagen.bungeesystem.command.UnbanCommand;
 import de.hanimehagen.bungeesystem.listener.PostLoginListener;
 import de.hanimehagen.bungeesystem.mysql.MySQL;
-import de.hanimehagen.bungeesystem.util.ReasonUtil;
+import de.hanimehagen.bungeesystem.util.MethodUtil;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class Bungeesystem extends Plugin {
@@ -19,7 +19,7 @@ public final class Bungeesystem extends Plugin {
         instance = this;
         Configs configs = new Configs();
         configs.loadConfigs();
-        ReasonUtil.loadReasons();
+        MethodUtil.loadPunishReasons();
         MySQL.connect();
         MySQL.createTables();
         init();
@@ -36,6 +36,7 @@ public final class Bungeesystem extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new MuteCommand("mute", "system.mute"));
         getProxy().getPluginManager().registerCommand(this, new CheckCommand("check", "system.check"));
         getProxy().getPluginManager().registerCommand(this, new UnbanCommand("unban", "system.unban"));
+        getProxy().getPluginManager().registerCommand(this, new UnbanCommand("unmute", "system.unmute"));
         getProxy().getPluginManager().registerListener(this, new PostLoginListener());
     }
 

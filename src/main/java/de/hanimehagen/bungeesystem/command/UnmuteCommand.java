@@ -8,26 +8,25 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
+public class UnmuteCommand extends Command {
 
-public class UnbanCommand extends Command {
-
-    public UnbanCommand(String name, String permission) {
-        super("unban", "system.unban");
+    public UnmuteCommand(String name, String permission) {
+        super("unmute", "system.unmute");
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(sender.hasPermission("system.unban")) {
+        if(sender.hasPermission("system.unmute")) {
             if(args.length == 1) {
-                PunishmentUtil.unpunishName(sender, args[0], PunishmentType.MUTE, "Punishment.Mute", "Punishment.NotMuted");
+                PunishmentUtil.unpunishName(sender, args[0], PunishmentType.BAN, "Punishment.Unban", "Punishment.NotBanned");
             } else if(args.length == 2) {
                 if(args[0].equals("id")) {
-                    PunishmentUtil.unpunishId(sender, args[1], PunishmentType.MUTE, "Punishment.UnmuteId", "Punishment.CantFindMuteId");
+                    PunishmentUtil.unpunishId(sender, args[1], PunishmentType.BAN, "Punishment.UnbanId", "Punishment.CantFindBanId");
                 } else {
-                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unmute <player> | /unmute id <muteid>"))));
+                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unban <player> | /unban id <banid>"))));
                 }
             } else {
-                sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unmute <player> | /unmute id <muteid>"))));
+                sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unban <player> | /unban id <banid>"))));
             }
         } else {
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.NO_PERMS)));
