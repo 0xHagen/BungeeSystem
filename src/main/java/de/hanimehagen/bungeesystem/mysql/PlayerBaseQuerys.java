@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PlayerQuerys {
+public class PlayerBaseQuerys {
 
     public static void createPlayerTable() {
         try {

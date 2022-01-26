@@ -2,7 +2,7 @@ package de.hanimehagen.bungeesystem.util;
 
 import de.hanimehagen.bungeesystem.Configs;
 import de.hanimehagen.bungeesystem.Data;
-import de.hanimehagen.bungeesystem.mysql.PlayerQuerys;
+import de.hanimehagen.bungeesystem.mysql.PlayerBaseQuerys;
 import de.hanimehagen.bungeesystem.mysql.PunishmentQuerys;
 import de.hanimehagen.bungeesystem.punishment.Punishment;
 import de.hanimehagen.bungeesystem.punishment.PunishmentType;
@@ -21,7 +21,7 @@ public class PunishmentUtil {
     public static void punish(CommandSender sender, String name, String reasonId, PunishmentType type, HashMap<String, String> reasons, String alreadyMessagePath, String punishMessagePath) {
         Punishment punishment;
         String id = generateId();
-        String uuid = PlayerQuerys.getUuid(name);
+        String uuid = PlayerBaseQuerys.getUuid(name);
         String operatorUuid;
         String operatorName;
         if(!PunishmentQuerys.isPunishedByUuid(uuid, type)) {
@@ -56,7 +56,7 @@ public class PunishmentUtil {
         } else {
             operatorName = "CONSOLE";
         }
-        String uuid = PlayerQuerys.getUuid(name);
+        String uuid = PlayerBaseQuerys.getUuid(name);
         if(PunishmentQuerys.isPunishedByUuid(uuid, type)) {
             PunishmentQuerys.deletePunishmentByUuid(uuid, type);
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString(unpunishMessagePath)).replace("%player%", name).replace("%operator%", operatorName)));
@@ -90,7 +90,7 @@ public class PunishmentUtil {
     }
 
     private static void generateString(StringBuilder id) {
-        for(int i = 0; i < 8; i++) {
+        for(int i = 0; i < 6; i++) {
             Random r = new Random();
             int low = 0;
             int high = 62;

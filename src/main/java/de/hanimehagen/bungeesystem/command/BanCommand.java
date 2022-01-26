@@ -2,7 +2,7 @@ package de.hanimehagen.bungeesystem.command;
 
 import de.hanimehagen.bungeesystem.Configs;
 import de.hanimehagen.bungeesystem.Data;
-import de.hanimehagen.bungeesystem.mysql.PlayerQuerys;
+import de.hanimehagen.bungeesystem.mysql.PlayerBaseQuerys;
 import de.hanimehagen.bungeesystem.punishment.PunishmentType;
 import de.hanimehagen.bungeesystem.util.DurationUtil;
 import de.hanimehagen.bungeesystem.util.MethodUtil;
@@ -21,7 +21,7 @@ public class BanCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("system.ban")) {
             if (args.length == 2) {
-                if (PlayerQuerys.existsName(args[0])) {
+                if (PlayerBaseQuerys.existsName(args[0])) {
                     if (Data.BAN_REASON_MAP.containsKey(args[1])) {
                         PunishmentUtil.punish(sender, args[0], args[1], PunishmentType.BAN, Data.BAN_REASON_MAP, "Punishment.AlreadyBanned", "Punishment.Ban");
                     } else {

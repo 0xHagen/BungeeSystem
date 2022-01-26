@@ -45,7 +45,7 @@ public class MySQL {
 
     public static void createTables() {
         PunishmentQuerys.createPunishmentTable();
-        PlayerQuerys.createPlayerTable();
+        PlayerBaseQuerys.createPlayerTable();
     }
 
 }

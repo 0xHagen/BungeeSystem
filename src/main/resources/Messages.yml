@@ -15,6 +15,7 @@ Punishment:
   NotMuted: "&7The player &c%player% &7is currently not muted"
   CantFindBanId: "&7There was no BanID found with the value: &c%id%"
   CantFindMuteId: "&7There was no MuteID found with the value: &c%id%"
+  CantFindId: "&7There was no PunishID found with the value: &c%id%"
   BanReasons:
     Header: "&7Available Ban-IDs:"
     Component: "&7[&c%id%&7]&8: &7Reason: &c%reason% &8| &7Duration: &c%duration%"
@@ -36,5 +37,15 @@ Punishment:
       - "&7Banned from&8: &c%operator%"
       - "&7Ban startet at&8: &c%start%"
       - "&7Ban ending at&8: &c%end%"
+    Id:
+      - "&7ID&8: &c%id%"
+      - "&7Punised UUID&8: &c%uuid%"
+      - "&7Punised Name&8: &c%name%"
+      - "&7Operator UUID&8: &c%operatoruuid%"
+      - "&7Operator Name&8: &c%operatorname%"
+      - "&7Reason&8: &c%reason%"
+      - "&7Type&8: &c%type%"
+      - "&7Started at&8: &c%start%"
+      - "&7Ending at&8: &c%end%"
     NotMuted: "&cMute&8: &7Player is currently not muted"
     NotBanned: "&cBan&8: &7Player is currently not banned"

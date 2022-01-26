@@ -1,9 +1,6 @@
 package de.hanimehagen.bungeesystem;
 
-import de.hanimehagen.bungeesystem.command.BanCommand;
-import de.hanimehagen.bungeesystem.command.CheckCommand;
-import de.hanimehagen.bungeesystem.command.MuteCommand;
-import de.hanimehagen.bungeesystem.command.UnbanCommand;
+import de.hanimehagen.bungeesystem.command.*;
 import de.hanimehagen.bungeesystem.listener.PostLoginListener;
 import de.hanimehagen.bungeesystem.mysql.MySQL;
 import de.hanimehagen.bungeesystem.util.MethodUtil;
@@ -36,7 +33,7 @@ public final class Bungeesystem extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new MuteCommand("mute", "system.mute"));
         getProxy().getPluginManager().registerCommand(this, new CheckCommand("check", "system.check"));
         getProxy().getPluginManager().registerCommand(this, new UnbanCommand("unban", "system.unban"));
-        getProxy().getPluginManager().registerCommand(this, new UnbanCommand("unmute", "system.unmute"));
+        getProxy().getPluginManager().registerCommand(this, new UnmuteCommand("unmute", "system.unmute"));
         getProxy().getPluginManager().registerListener(this, new PostLoginListener());
     }
 

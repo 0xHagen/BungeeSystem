@@ -1,5 +1,9 @@
 package de.hanimehagen.bungeesystem.util;
 
+import de.hanimehagen.bungeesystem.Data;
+
+import java.sql.Timestamp;
+
 public class DurationUtil {
 
     public static long getDuration(String str) {
@@ -35,6 +39,16 @@ public class DurationUtil {
     public static long parseDuration(String str) {
         String result = str.substring(0, str.length() - 1);
         return Long.parseLong(result);
+    }
+
+    public static String getEndDurationString(long end) {
+        String endString;
+        if(end == -1) {
+            endString = DurationUtil.getDurationString(String.valueOf(end));
+        } else {
+            endString = Data.DATE_FORMAT.format(new Timestamp(end));
+        }
+        return endString;
     }
 
 }

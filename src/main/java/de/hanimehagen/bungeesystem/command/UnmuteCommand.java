@@ -18,15 +18,16 @@ public class UnmuteCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("system.unmute")) {
             if(args.length == 1) {
-                PunishmentUtil.unpunishName(sender, args[0], PunishmentType.BAN, "Punishment.Unban", "Punishment.NotBanned");
+                PunishmentUtil.unpunishName(sender, args[0], PunishmentType.MUTE, "Punishment.Unmute", "Punishment.NotMuted");
             } else if(args.length == 2) {
                 if(args[0].equals("id")) {
-                    PunishmentUtil.unpunishId(sender, args[1], PunishmentType.BAN, "Punishment.UnbanId", "Punishment.CantFindBanId");
+                    //TODO: Cant find IDs
+                    PunishmentUtil.unpunishId(sender, args[1], PunishmentType.MUTE, "Punishment.UnmuteId", "Punishment.CantFindMuteId");
                 } else {
-                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unban <player> | /unban id <banid>"))));
+                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unmute id <muteid>"))));
                 }
             } else {
-                sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unban <player> | /unban id <banid>"))));
+                sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/unmute <player> | /unmute id <muteid>"))));
             }
         } else {
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.NO_PERMS)));

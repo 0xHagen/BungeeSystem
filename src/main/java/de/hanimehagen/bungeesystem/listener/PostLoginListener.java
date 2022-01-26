@@ -1,6 +1,6 @@
 package de.hanimehagen.bungeesystem.listener;
 
-import de.hanimehagen.bungeesystem.mysql.PlayerQuerys;
+import de.hanimehagen.bungeesystem.mysql.PlayerBaseQuerys;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -11,8 +11,8 @@ public class PostLoginListener implements Listener {
     @EventHandler
     public void onPreLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
-        PlayerQuerys.deleteNotMatchingPlayerName(player);
-        PlayerQuerys.createPlayer(player);
+        PlayerBaseQuerys.deleteNotMatchingPlayerName(player);
+        PlayerBaseQuerys.createPlayer(player);
     }
 
 }

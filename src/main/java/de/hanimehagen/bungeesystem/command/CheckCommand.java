@@ -2,9 +2,11 @@ package de.hanimehagen.bungeesystem.command;
 
 import de.hanimehagen.bungeesystem.Configs;
 import de.hanimehagen.bungeesystem.Data;
-import de.hanimehagen.bungeesystem.mysql.PlayerQuerys;
+import de.hanimehagen.bungeesystem.mysql.PlayerBaseQuerys;
 import de.hanimehagen.bungeesystem.mysql.PunishmentQuerys;
+import de.hanimehagen.bungeesystem.punishment.Punishment;
 import de.hanimehagen.bungeesystem.punishment.PunishmentType;
+import de.hanimehagen.bungeesystem.util.DurationUtil;
 import de.hanimehagen.bungeesystem.util.MethodUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,17 +25,17 @@ public class CheckCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("system.check")) {
             if(args.length == 1) {
-                if (PlayerQuerys.existsName(args[0]) || PlayerQuerys.existsUuid(args[0])) {
+                if (PlayerBaseQuerys.existsName(args[0]) || PlayerBaseQuerys.existsUuid(args[0])) {
 
                     boolean usedName = args[0].length() <= 16;
                     String uuid;
                     String name;
                     if(usedName) {
                         name = args[0];
-                        uuid = PlayerQuerys.getUuid(name);
+                        uuid = PlayerBaseQuerys.getUuid(name);
                     } else {
                         uuid = args[0];
-                        name = PlayerQuerys.getName(uuid);
+                        name = PlayerBaseQuerys.getName(uuid);
                     }
 
                     boolean isMuted = PunishmentQuerys.isPunishedByUuid(uuid, PunishmentType.MUTE);
@@ -50,13 +52,13 @@ public class CheckCommand extends Command {
                     sender.sendMessage(new TextComponent(MethodUtil.format(headerMessage.toString())));
 
                     if(isMuted) {
-                        sendPunishmentCheck1(sender, uuid, PunishmentType.MUTE, "Punishment.Check.Muted");
+                        sendPunishmentCheck(sender, uuid, PunishmentType.MUTE, "Punishment.Check.Muted");
                     } else {
                         String notMuted = Configs.getMessages().getString("Punishment.Check.NotMuted");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notMuted + "\n")));
                     }
                     if(isBanned) {
-                        sendPunishmentCheck1(sender, uuid, PunishmentType.BAN, "Punishment.Check.Banned");
+                        sendPunishmentCheck(sender, uuid, PunishmentType.BAN, "Punishment.Check.Banned");
                     } else {
                         String notBanned = Configs.getMessages().getString("Punishment.Check.NotBanned");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notBanned + "\n")));
@@ -64,46 +66,66 @@ public class CheckCommand extends Command {
                 } else {
                     sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/check <player> (Player not found)"))));
                 }
+            } else if(args.length == 2) {
+                if(args[0].equals("id")) {
+                    if(PunishmentQuerys.existsId(args[1])) {
+                        StringBuilder message = new StringBuilder();
+                        List<String> layout = Configs.getMessages().getStringList("Punishment.Check.Id");
+                        Punishment punishment = PunishmentQuerys.getPunishmentbyId(args[1]);
+                        assert punishment != null;
+                        String end = DurationUtil.getEndDurationString(punishment.getEndTime());
+                        message.append("\n");
+                        for(String component : layout) {
+                            message.append(Data.PUNISH_PREFIX).append(component.replace("%id%", args[1]).
+                                    replace("%uuid%", punishment.getUuid()).
+                                    replace("%name%", punishment.getName()).
+                                    replace("%operatoruuid%", punishment.getOperatorUuid()).
+                                    replace("%operatorname%", punishment.getOperatorName()).
+                                    replace("%reason%", punishment.getReason()).
+                                    replace("%type%", punishment.getType().toString()).
+                                    replace("%start%", Data.DATE_FORMAT.format(new Timestamp(punishment.getStartTime()))).
+                                    replace("%end%", end)).append("\n");
+                        }
+                        sender.sendMessage(new TextComponent(MethodUtil.format(message.toString())));
+                    } else {
+                        sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.CantFindId")).replace("%id%", args[1])));
+                    }
+                } else {
+                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/check id <id>"))));
+                }
             } else {
-                sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/check <player>"))));
+                sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/check <player> | /check id <id>"))));
             }
         } else {
             sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.NO_PERMS)));
         }
     }
 
-    private void sendPunishmentCheck1(CommandSender sender, String uuid, PunishmentType type, String layoutPath) {
+    private void sendPunishmentCheck(CommandSender sender, String uuid, PunishmentType type, String layoutPath) {
         StringBuilder message = new StringBuilder();
         List<String> layout = Configs.getMessages().getStringList(layoutPath);
 
-        String reason = PunishmentQuerys.getReasonByPunishedUuid(uuid, type);
-        String operatorUuid = PunishmentQuerys.getOperatorUuidByPunishedUuid(uuid, type);
+        Punishment punishment = PunishmentQuerys.getPunishmentbyUuidAndType(uuid, type);
+
+        assert punishment != null;
+        String reason = punishment.getReason();
+        String operatorUuid = punishment.getOperatorUuid();
         String operator;
 
         assert operatorUuid != null;
         if(!operatorUuid.equals("CONSOLE")) {
-            if(PlayerQuerys.existsUuid(operatorUuid)) {
-                operator = PlayerQuerys.getName(operatorUuid);
-            } else {
-                operator = PunishmentQuerys.getOperatorByPunishedUuid(uuid, type);
-            }
+            operator = punishment.getOperatorName();
         } else {
             operator = "CONSOLE";
         }
 
-        Timestamp timestampStart = new Timestamp(PunishmentQuerys.getStartTimeByUuid(uuid, type));
-        long endLong = PunishmentQuerys.getEndTimeByUuid(uuid, type);
-        String endString;
-        if(endLong == -1) {
-            endString = "Permanent";
-        } else {
-            endString = Data.DATE_FORMAT.format(new Timestamp(endLong));
-        }
+        Timestamp timestampStart = new Timestamp(punishment.getStartTime());
+        String end = DurationUtil.getEndDurationString(punishment.getEndTime());
 
         for(String component : layout) {
             assert reason != null;
             assert operator != null;
-            message.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", endString)).append("\n");
+            message.append(Data.PUNISH_PREFIX).append(component.replace("%reason%", reason).replace("%operator%", operator).replace("%start%", Data.DATE_FORMAT.format(timestampStart)).replace("%end%", end)).append("\n");
         }
 
         sender.sendMessage(new TextComponent(MethodUtil.format(message.toString())));
