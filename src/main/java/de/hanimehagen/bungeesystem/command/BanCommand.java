@@ -2,7 +2,8 @@ package de.hanimehagen.bungeesystem.command;
 
 import de.hanimehagen.bungeesystem.Configs;
 import de.hanimehagen.bungeesystem.Data;
-import de.hanimehagen.bungeesystem.mysql.PlayerBaseQuerys;
+import de.hanimehagen.bungeesystem.data.PlayerBaseData;
+import de.hanimehagen.bungeesystem.data.PunishmentData;
 import de.hanimehagen.bungeesystem.punishment.PunishmentType;
 import de.hanimehagen.bungeesystem.util.DurationUtil;
 import de.hanimehagen.bungeesystem.util.MethodUtil;
@@ -10,20 +11,28 @@ import de.hanimehagen.bungeesystem.util.PunishmentUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
+
+import javax.sql.DataSource;
 
 public class BanCommand extends Command {
 
-    public BanCommand(String name, String permission) {
+    PlayerBaseData playerBaseData;
+    PunishmentUtil punishmentUtil;
+
+    public BanCommand(String name, String permission, Plugin plugin, DataSource dataSource) {
         super("ban", "system.ban");
+        playerBaseData = new PlayerBaseData(plugin, dataSource);
+        punishmentUtil = new PunishmentUtil(plugin, dataSource);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("system.ban")) {
             if (args.length == 2) {
-                if (PlayerBaseQuerys.existsName(args[0])) {
+                if (this.playerBaseData.existsName(args[0])) {
                     if (Data.BAN_REASON_MAP.containsKey(args[1])) {
-                        PunishmentUtil.punish(sender, args[0], args[1], PunishmentType.BAN, Data.BAN_REASON_MAP, "Punishment.AlreadyBanned", "Punishment.Ban");
+                        this.punishmentUtil.punish(sender, args[0], args[1], PunishmentType.BAN, Data.BAN_REASON_MAP, "Punishment.AlreadyBanned", "Punishment.Ban");
                     } else {
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/ban <player> <id> (Incorrect Id)"))));
                     }

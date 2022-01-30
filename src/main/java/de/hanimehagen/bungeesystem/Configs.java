@@ -11,7 +11,7 @@ import java.nio.file.Files;
 
 public class Configs {
 
-    private final File configFile = new File(getDataFolder(), "config.yml");
+    private final File configFile = new File(getDataFolder(), "Config.yml");
     private final File messageFile = new File(getDataFolder(), "Messages.yml");
     private final File mysqlFile = new File(getDataFolder(), "MySQL.yml");
     public static Configuration config;
@@ -24,7 +24,7 @@ public class Configs {
                 getDataFolder().mkdirs();
             }
             if (!configFile.exists()) {
-                Files.copy(getPlugin().getResourceAsStream("config.yml"), configFile.toPath());
+                Files.copy(getPlugin().getResourceAsStream("Config.yml"), configFile.toPath());
             }
             if (!messageFile.exists()) {
                 Files.copy(getPlugin().getResourceAsStream("Messages.yml"), messageFile.toPath());

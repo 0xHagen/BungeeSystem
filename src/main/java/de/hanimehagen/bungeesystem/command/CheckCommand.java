@@ -2,8 +2,8 @@ package de.hanimehagen.bungeesystem.command;
 
 import de.hanimehagen.bungeesystem.Configs;
 import de.hanimehagen.bungeesystem.Data;
-import de.hanimehagen.bungeesystem.mysql.PlayerBaseQuerys;
-import de.hanimehagen.bungeesystem.mysql.PunishmentQuerys;
+import de.hanimehagen.bungeesystem.data.PlayerBaseData;
+import de.hanimehagen.bungeesystem.data.PunishmentData;
 import de.hanimehagen.bungeesystem.punishment.Punishment;
 import de.hanimehagen.bungeesystem.punishment.PunishmentType;
 import de.hanimehagen.bungeesystem.util.DurationUtil;
@@ -11,35 +11,42 @@ import de.hanimehagen.bungeesystem.util.MethodUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
 
+import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.List;
 
 public class CheckCommand extends Command {
 
-    public CheckCommand(String name, String permission) {
+    PlayerBaseData playerBaseData;
+    PunishmentData punishmentData;
+
+    public CheckCommand(String name, String permission, Plugin plugin, DataSource dataSource) {
         super("check", "system.check");
+        this.playerBaseData = new PlayerBaseData(plugin, dataSource);
+        this.punishmentData = new PunishmentData(plugin, dataSource);
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(sender.hasPermission("system.check")) {
             if(args.length == 1) {
-                if (PlayerBaseQuerys.existsName(args[0]) || PlayerBaseQuerys.existsUuid(args[0])) {
+                if (this.playerBaseData.existsName(args[0]) || this.playerBaseData.existsUuid(args[0])) {
 
                     boolean usedName = args[0].length() <= 16;
                     String uuid;
                     String name;
                     if(usedName) {
                         name = args[0];
-                        uuid = PlayerBaseQuerys.getUuid(name);
+                        uuid = this.playerBaseData.getUuidByName(name);
                     } else {
                         uuid = args[0];
-                        name = PlayerBaseQuerys.getName(uuid);
+                        name = this.playerBaseData.getNameByUuid(uuid);
                     }
 
-                    boolean isMuted = PunishmentQuerys.isPunishedByUuid(uuid, PunishmentType.MUTE);
-                    boolean isBanned = PunishmentQuerys.isPunishedByUuid(uuid, PunishmentType.BAN);
+                    boolean isMuted = this.punishmentData.isPunished(uuid, PunishmentType.MUTE);
+                    boolean isBanned = this.punishmentData.isPunished(uuid, PunishmentType.BAN);
                     StringBuilder headerMessage = new StringBuilder();
                     List<String> headerLayout = Configs.getMessages().getStringList("Punishment.Check.Header");
 
@@ -68,10 +75,10 @@ public class CheckCommand extends Command {
                 }
             } else if(args.length == 2) {
                 if(args[0].equals("id")) {
-                    if(PunishmentQuerys.existsId(args[1])) {
+                    if(this.punishmentData.existsId(args[1])) {
                         StringBuilder message = new StringBuilder();
                         List<String> layout = Configs.getMessages().getStringList("Punishment.Check.Id");
-                        Punishment punishment = PunishmentQuerys.getPunishmentbyId(args[1]);
+                        Punishment punishment = this.punishmentData.getPunishmentById(args[1]);
                         assert punishment != null;
                         String end = DurationUtil.getEndDurationString(punishment.getEndTime());
                         message.append("\n");
@@ -105,7 +112,7 @@ public class CheckCommand extends Command {
         StringBuilder message = new StringBuilder();
         List<String> layout = Configs.getMessages().getStringList(layoutPath);
 
-        Punishment punishment = PunishmentQuerys.getPunishmentbyUuidAndType(uuid, type);
+        Punishment punishment = this.punishmentData.getPunishmentByType(uuid, type);
 
         assert punishment != null;
         String reason = punishment.getReason();

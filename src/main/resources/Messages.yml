@@ -1,6 +1,7 @@
 Prefix: "&9System &8» "
 NoPerms: "&cCommand not found or no permissions!"
 CorrectUse: "&cCorrect Usage: &c%cmd%"
+Error: "&cInternal error acurred in class: %class%"
 Punishment:
   Prefix: "&cPunishment &8» "
   Ban: "&7The player &c%player% &7was succesfully banned from %operator% for the reason %reason%"

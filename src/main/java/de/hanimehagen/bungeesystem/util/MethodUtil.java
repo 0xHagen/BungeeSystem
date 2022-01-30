@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class MethodUtil {
 
     private final static Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");

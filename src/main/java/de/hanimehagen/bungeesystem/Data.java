@@ -19,5 +19,6 @@ public class Data {
     public static final String NO_PERMS = messages.getString("NoPerms");
     public static final String CORRECT_USE = messages.getString("CorrectUse");
     public static final String PUNISH_PREFIX = messages.getString("Punishment.Prefix");
+    public static final String ERROR = messages.getString("Error");
 
 }
