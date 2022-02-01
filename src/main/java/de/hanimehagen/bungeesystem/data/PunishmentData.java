@@ -9,8 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
-public class PunishmentData extends PluginDataHolder{
+public class PunishmentData extends PluginDataHolder {
+
+    //TODO: Optimize exist querys
 
     public PunishmentData(Plugin plugin, DataSource source) {
         super(plugin, source);
@@ -111,19 +114,14 @@ public class PunishmentData extends PluginDataHolder{
         return null;
     }
 
-    //TODO: Optimize
     public boolean isPunished(String uuid, PunishmentType type) {
         try (Connection conn = conn(); PreparedStatement stmt = conn.prepareStatement(
-                "SELECT end FROM Punishments WHERE uuid = ? AND type = ?")) {
+                "SELECT id FROM Punishments WHERE uuid = ? AND type = ? AND (end > ? OR end = -1)")) {
             stmt.setString(1, uuid);
             stmt.setString(2, type.toString());
+            stmt.setLong(3, System.currentTimeMillis());
             ResultSet resultSet = stmt.executeQuery();
-            long end = 0;
-            while (resultSet.next()) {
-                end = resultSet.getLong("end");
-            }
-            long now = System.currentTimeMillis();
-            return end > now || end == -1;
+            return resultSet.next();
         } catch (SQLException e) {
             logSQLError("Could not check if player is punished", e);
         }
@@ -140,6 +138,21 @@ public class PunishmentData extends PluginDataHolder{
             }
         } catch (SQLException e) {
             logSQLError("Could not get PunishmentType", e);
+        }
+        return null;
+    }
+
+    public String getUuidById(String id, PunishmentType type) {
+        try (Connection conn = conn(); PreparedStatement stmt = conn.prepareStatement(
+                "SELECT uuid FROM Punishments WHERE id = ? AND type = ?")) {
+            stmt.setString(1, id);
+            stmt.setString(2, type.toString());
+            ResultSet resultSet = stmt.executeQuery();
+            if(resultSet.next()) {
+                return resultSet.getString("uuid");
+            }
+        } catch (SQLException e) {
+            logSQLError("Could not get UUID", e);
         }
         return null;
     }
@@ -166,6 +179,34 @@ public class PunishmentData extends PluginDataHolder{
             return updated == 1;
         } catch (SQLException e) {
             logSQLError("Could not delete Punishment", e);
+        }
+        return false;
+    }
+
+    public HashMap<String, Long> getPunishedPlayers(PunishmentType type) {
+        try (Connection conn = conn(); PreparedStatement stmt = conn.prepareStatement(
+                "SELECT uuid, end FROM Punishments WHERE type = ?")) {
+            stmt.setString(1, type.toString());
+            ResultSet resultSet = stmt.executeQuery();
+            HashMap<String, Long> punished = new HashMap<>();
+            while (resultSet.next()) {
+                punished.put(resultSet.getString("uuid"), resultSet.getLong("end"));
+            }
+            return punished;
+        } catch (SQLException e) {
+            logSQLError("Could not get Punishment Players", e);
+        }
+        return null;
+    }
+
+    public boolean deleteInvalidPunishments() {
+        try (Connection conn = conn(); PreparedStatement stmt = conn.prepareStatement(
+                "DELETE FROM Punishments WHERE end < ? AND end != -1")) {
+            stmt.setLong(1, System.currentTimeMillis());
+            int updated = stmt.executeUpdate();
+            return updated == 1;
+        } catch (SQLException e) {
+            logSQLError("Could not delete invalid Punishment", e);
         }
         return false;
     }

@@ -1,7 +1,7 @@
 package de.hanimehagen.bungeesystem.data;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import de.hanimehagen.bungeesystem.Configs;
+import de.hanimehagen.bungeesystem.util.ConfigUtil;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.sql.DataSource;
@@ -12,11 +12,11 @@ public class DataSourceProvider {
 
     public static DataSource initMySQLDataSource(Plugin plugin) throws SQLException {
         MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setServerName(Configs.getString(Configs.getMysql(), "host", "localhost"));
-        dataSource.setPassword(Configs.getString(Configs.getMysql(), "password", ""));
-        dataSource.setPortNumber(Integer.parseInt(Configs.getString(Configs.getMysql(), "port", "3306")));
-        dataSource.setDatabaseName(Configs.getString(Configs.getMysql(), "database", "database"));
-        dataSource.setUser(Configs.getString(Configs.getMysql(), "username", "root"));
+        dataSource.setServerName(ConfigUtil.getString(ConfigUtil.getMysql(), "host", "localhost"));
+        dataSource.setPassword(ConfigUtil.getString(ConfigUtil.getMysql(), "password", ""));
+        dataSource.setPortNumber(Integer.parseInt(ConfigUtil.getString(ConfigUtil.getMysql(), "port", "3306")));
+        dataSource.setDatabaseName(ConfigUtil.getString(ConfigUtil.getMysql(), "database", "database"));
+        dataSource.setUser(ConfigUtil.getString(ConfigUtil.getMysql(), "username", "root"));
 
         testDataSource(plugin, dataSource);
 

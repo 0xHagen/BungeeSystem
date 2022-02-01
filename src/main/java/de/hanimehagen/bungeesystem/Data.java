@@ -1,5 +1,6 @@
 package de.hanimehagen.bungeesystem;
 
+import de.hanimehagen.bungeesystem.util.ConfigUtil;
 import net.md_5.bungee.config.Configuration;
 
 import java.text.SimpleDateFormat;
@@ -10,8 +11,8 @@ public class Data {
     public static HashMap<String, String> MUTE_REASON_MAP = new HashMap<>();
     public static HashMap<String, String> BAN_REASON_MAP = new HashMap<>();
 
-    public static final Configuration config = Configs.getConfig();
-    public static final Configuration messages = Configs.getMessages();
+    private static final Configuration config = ConfigUtil.getConfig();
+    private static final Configuration messages = ConfigUtil.getMessages();
 
     public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
@@ -21,4 +22,6 @@ public class Data {
     public static final String PUNISH_PREFIX = messages.getString("Punishment.Prefix");
     public static final String ERROR = messages.getString("Error");
 
+    public static HashMap<String, Long> BANNED_PLAYERS = new HashMap<>();
+    public static HashMap<String, Long> MUTED_PLAYERS = new HashMap<>();
 }

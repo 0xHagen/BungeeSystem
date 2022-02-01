@@ -1,6 +1,6 @@
 package de.hanimehagen.bungeesystem.command;
 
-import de.hanimehagen.bungeesystem.Configs;
+import de.hanimehagen.bungeesystem.util.ConfigUtil;
 import de.hanimehagen.bungeesystem.Data;
 import de.hanimehagen.bungeesystem.data.PlayerBaseData;
 import de.hanimehagen.bungeesystem.punishment.PunishmentType;
@@ -39,11 +39,11 @@ public class MuteCommand extends Command {
                     sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/mute <player> <id> (Player not found)"))));
                 }
             } else if(args.length == 0) {
-                sender.sendMessage(new TextComponent(MethodUtil.format("\n" + Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.MuteReasons.Header"))));
+                sender.sendMessage(new TextComponent(MethodUtil.format("\n" + Data.PUNISH_PREFIX + ConfigUtil.getMessages().getString("Punishment.MuteReasons.Header"))));
                 for(int i = 0; i < Data.MUTE_REASON_MAP.size(); i++) {
                     String reason = Data.MUTE_REASON_MAP.get(String.valueOf(i + 1)).split("\\$")[0];
                     String duration = DurationUtil.getDurationString(Data.MUTE_REASON_MAP.get(String.valueOf(i + 1)).split("\\$")[1]);
-                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.MuteReasons.Component").replace("%id%", String.valueOf(i + 1)).replace("%reason%", reason)).replace("%duration%", duration)));
+                    sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + ConfigUtil.getMessages().getString("Punishment.MuteReasons.Component").replace("%id%", String.valueOf(i + 1)).replace("%reason%", reason)).replace("%duration%", duration)));
                 }
                 sender.sendMessage(new TextComponent(MethodUtil.format("")));
             } else {

@@ -1,5 +1,6 @@
-package de.hanimehagen.bungeesystem;
+package de.hanimehagen.bungeesystem.util;
 
+import de.hanimehagen.bungeesystem.Bungeesystem;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -9,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class Configs {
+public class ConfigUtil {
 
     private final File configFile = new File(getDataFolder(), "Config.yml");
     private final File messageFile = new File(getDataFolder(), "Messages.yml");

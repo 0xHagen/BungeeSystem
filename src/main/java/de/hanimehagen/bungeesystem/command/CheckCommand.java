@@ -1,6 +1,6 @@
 package de.hanimehagen.bungeesystem.command;
 
-import de.hanimehagen.bungeesystem.Configs;
+import de.hanimehagen.bungeesystem.util.ConfigUtil;
 import de.hanimehagen.bungeesystem.Data;
 import de.hanimehagen.bungeesystem.data.PlayerBaseData;
 import de.hanimehagen.bungeesystem.data.PunishmentData;
@@ -48,7 +48,7 @@ public class CheckCommand extends Command {
                     boolean isMuted = this.punishmentData.isPunished(uuid, PunishmentType.MUTE);
                     boolean isBanned = this.punishmentData.isPunished(uuid, PunishmentType.BAN);
                     StringBuilder headerMessage = new StringBuilder();
-                    List<String> headerLayout = Configs.getMessages().getStringList("Punishment.Check.Header");
+                    List<String> headerLayout = ConfigUtil.getMessages().getStringList("Punishment.Check.Header");
 
                     headerMessage.append("\n");
                     for(String component : headerLayout) {
@@ -61,13 +61,13 @@ public class CheckCommand extends Command {
                     if(isMuted) {
                         sendPunishmentCheck(sender, uuid, PunishmentType.MUTE, "Punishment.Check.Muted");
                     } else {
-                        String notMuted = Configs.getMessages().getString("Punishment.Check.NotMuted");
+                        String notMuted = ConfigUtil.getMessages().getString("Punishment.Check.NotMuted");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notMuted + "\n")));
                     }
                     if(isBanned) {
                         sendPunishmentCheck(sender, uuid, PunishmentType.BAN, "Punishment.Check.Banned");
                     } else {
-                        String notBanned = Configs.getMessages().getString("Punishment.Check.NotBanned");
+                        String notBanned = ConfigUtil.getMessages().getString("Punishment.Check.NotBanned");
                         sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + notBanned + "\n")));
                     }
                 } else {
@@ -77,7 +77,7 @@ public class CheckCommand extends Command {
                 if(args[0].equals("id")) {
                     if(this.punishmentData.existsId(args[1])) {
                         StringBuilder message = new StringBuilder();
-                        List<String> layout = Configs.getMessages().getStringList("Punishment.Check.Id");
+                        List<String> layout = ConfigUtil.getMessages().getStringList("Punishment.Check.Id");
                         Punishment punishment = this.punishmentData.getPunishmentById(args[1]);
                         assert punishment != null;
                         String end = DurationUtil.getEndDurationString(punishment.getEndTime());
@@ -95,7 +95,7 @@ public class CheckCommand extends Command {
                         }
                         sender.sendMessage(new TextComponent(MethodUtil.format(message.toString())));
                     } else {
-                        sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + Configs.getMessages().getString("Punishment.CantFindId")).replace("%id%", args[1])));
+                        sender.sendMessage(new TextComponent(MethodUtil.format(Data.PUNISH_PREFIX + ConfigUtil.getMessages().getString("Punishment.CantFindId")).replace("%id%", args[1])));
                     }
                 } else {
                     sender.sendMessage(new TextComponent(MethodUtil.format(Data.PREFIX + Data.CORRECT_USE.replace("%cmd%", "/check id <id>"))));
@@ -110,7 +110,7 @@ public class CheckCommand extends Command {
 
     private void sendPunishmentCheck(CommandSender sender, String uuid, PunishmentType type, String layoutPath) {
         StringBuilder message = new StringBuilder();
-        List<String> layout = Configs.getMessages().getStringList(layoutPath);
+        List<String> layout = ConfigUtil.getMessages().getStringList(layoutPath);
 
         Punishment punishment = this.punishmentData.getPunishmentByType(uuid, type);
 
